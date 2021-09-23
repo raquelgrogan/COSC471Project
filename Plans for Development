@@ -1,0 +1,13 @@
+COSC 471/571 with Dr. Krish Narayanan Fall '21
+Project: Best-Book-Buy Online Bookstore
+
+Plans for Development:
+  Work will attempt to be split evenly between both team members. Our relevant experiences in database systems is similar, so we are 
+  going to try and divy up project goals evenly based on time requirements and availability. 
+  
+Hosting:
+  Hosting will be done locally using XAMPP, with the updated files needed to run the server always available in a github repo. This way,
+  as long as the most recent version of the code is committed to the github repo, either team member will be able to download and run the
+  server with the others' changes applied. This allows one team member to run the server locally on their machine, update some code, and then
+  upload the code to the github repo where the other team member can then download them and repeat the process using the same XAMPP configuration.
+  
