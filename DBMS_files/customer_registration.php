@@ -1,4 +1,38 @@
 <script>alert('Please enter all values')</script><!-- UI: Prithviraj Narahari, php code: Alexander Martens -->
+
+<?php
+require_once 'connection.php';
+
+if (isset($_POST['register_submit'])) {
+	# Registration Submit button was clicked
+	$username = $_POST['username'];
+	$pin = $_POST['pin'];
+	$fname = $_POST['firstname'];
+	$lname = $_POST['lastname'];
+	$address = $_POST['address'];
+	$city = $_POST['city'];
+	$state = $_POST['state'];
+	$zip = $_POST['zip'];
+	$cctype = $_POST['credit_card'];
+	$ccnumber = $_POST['card_number'];
+	$ccexpiration = $_POST['expiration'];
+
+	
+	$pin = (int)$pin;
+	$zip = (int)$zip;
+	$ccnumber = (int)$ccnumber;
+
+	$sql = "INSERT INTO customers VALUES ('$username', $pin, '$fname', '$lname', '$address', '$city', '$state', $zip, '$cctype', $ccnumber, '$ccexpiration');";
+	echo $sql;
+	if (mysqli_query($db, $sql)) {
+        //echo "New record has been added successfully !";
+     } else {
+        echo "Error: " . $sql . ":-" . mysqli_error($db);
+     }	
+}
+	mysqli_close($db);
+?>
+
 <head>
 <title> CUSTOMER REGISTRATION </title>
 </head>

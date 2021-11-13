@@ -1,4 +1,59 @@
+<?php
+	session_start();
+	require_once 'connection.php';
 
+	print_r($_SESSION["cart"]);
+	echo "<br>";
+
+	$cartArr = $_SESSION["cart"];
+
+	if (isset($_GET['delIsbn'])) {
+		$delIsbn = $_GET['delIsbn'];
+		$_SESSION["cart"]=array_diff($_SESSION["cart"],(array)$delIsbn);
+	}
+
+	if(isset($_POST['recalculate_payment'])) {
+		$queryCart = "SELECT `ISBN`, `Title`, `Quantity` FROM book WHERE ISBN IN (";
+		foreach($cartArr as $isbn){
+			$queryCart .= "$isbn, ";
+		}
+		$queryCart = rtrim($queryCart,', '); //remove last comma
+		$queryCart .= ");";
+		echo $queryCart;
+		
+		$response2 = mysqli_query($db, $queryCart);
+		$i = 0;
+		if($response2){
+			while($row = mysqli_fetch_array($response2)){
+				$qtyStr = "quantity".$i;
+				if($row['Quantity'] < $_POST[$qtyStr]){
+					echo '<script type="text/javascript">';
+					echo ' alert("Quantity for '.$row['Title'].' is too large, there is only '.$row['Quantity'].' books")'; 
+					echo '</script>';
+				}
+				$i += 1;
+			}
+		}
+
+		$_POST['recalculate_payment'] = ""; //reset button so isset is not always true
+	}
+
+	
+
+	$query = "SELECT * FROM book WHERE ISBN IN (";
+	foreach($cartArr as $isbn){
+		$query .= "$isbn, ";
+	}
+	$query = rtrim($query,', '); //remove last comma
+	$query .= ");";
+	echo $query. "<br>";
+	if($_SESSION["cart"] != null){
+		$response1 = mysqli_query($db, $query);
+	}
+	
+	//Subtotal
+	$subTotal = 0.0;
+?>
 <!DOCTYPE HTML>
 <head>
 	<title>Shopping Cart</title>
@@ -33,8 +88,34 @@
 			<td  colspan="3">
 				<div id="bookdetails" style="overflow:scroll;height:180px;width:400px;border:1px solid black;">
 					<table align="center" BORDER="2" CELLPADDING="2" CELLSPACING="2" WIDTH="100%">
-						<th width='10%'>Remove</th><th width='60%'>Book Description</th><th width='10%'>Qty</th><th width='10%'>Price</th>
-						<tr><td><button name='delete' id='delete' onClick='del("123441");return false;'>Delete Item</button></td><td>iuhdf</br><b>By</b> Avi Silberschatz</br><b>Publisher:</b> McGraw-Hill</td><td><input id='txt123441' name='txt123441' value='1' size='1' /></td><td>12.99</td></tr>					</table>
+						<?php 
+						$index = 0;
+						if($_SESSION["cart"] != null){
+							if($response1){
+								while($row = mysqli_fetch_array($response1)){ ?>
+								<th width='10%'>Remove</th><th width='60%'>Book Description</th>
+								<th width='10%'>Qty</th><th width='10%'>Price</th>
+								<tr>
+									<td><button name='delete' id='delete' onClick='del("<?php echo $row['ISBN']?>");return false;'>Delete Item</button></td>
+									<td><?php echo $row['Title'] ?></br>
+									<b>By</b> <?php echo $row['Author'] ?></br>
+									<b>Publisher:</b><?php echo $row['Publisher'] ?></td>
+									<td><input id='quantity<?php echo $index?>' name='quantity<?php echo $index?>' value='1' size='1' /></td>
+									<td><?php echo $row['Price'] ?></td>
+								</tr>
+								<?php
+									$subTotal += $row['Price'];
+									$index += 1;
+								}
+							}
+							else {
+								echo "Couldn't run database query";
+								echo msqli_error($db);
+							}
+							mysqli_close($db);
+						}
+					?>	
+					</table>
 				</div>
 			</td>
 		</tr>
@@ -47,7 +128,7 @@
 				&nbsp;
 			</td>
 			<td align="center">			
-				Subtotal:  $12.99			</td>
+				Subtotal:  $<?php echo $subTotal?>			</td>
 		</tr>
 	</table>
 </body>

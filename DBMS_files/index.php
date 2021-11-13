@@ -1,3 +1,9 @@
+<?php
+//once user goes back to index.php the session will restart
+session_start();
+session_unset(); 
+session_destroy();
+?>
 <!-- Figure 1: Welcome Screen by Alexander -->
 <title>Welcome to Best Book Buy Online Bookstore!</title>
 <body>
