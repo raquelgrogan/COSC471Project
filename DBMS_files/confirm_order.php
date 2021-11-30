@@ -1,4 +1,15 @@
-
+<?php
+	session_start();
+	//hadle Proceeding to checkout
+	if($_SESSION["customer"] == "unknown"){
+		//redirect to registration screen
+		header("Location: http://localhost/DBMS_files/customer_registration.php");
+		exit();
+	}else{
+		//proceed to checkout as normal
+		echo $_SESSION["customer"];
+	}
+?>
 <!DOCTYPE HTML>
 <head>
 	<title>CONFIRM ORDER</title>

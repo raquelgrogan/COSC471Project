@@ -7,6 +7,14 @@
 	if (!isset($_SESSION['cart'])) {
 		$_SESSION["cart"] = array();
 	}
+	//if customer is not set, set it equal to unknown
+	if (!isset($_SESSION['customer'])) {
+		$_SESSION["customer"] = "unknown";
+		echo "Customer is not set, set to: ".$_SESSION["customer"]." <br>";
+	}
+	else {
+		echo "Customer is set, set to: ".$_SESSION["customer"]." <br>";
+	}
 
 	//grab elements from post
 	$searchFor = $_GET["searchfor"];
@@ -19,14 +27,14 @@
 		$searchOn = explode(" ",$searchOn);
 	}
 
-	echo "category: $category <br>";
+	//echo "category: $category <br>";
 
 
 	if (isset($_GET['cartisbn'])) {
 		array_push($_SESSION["cart"],$_GET['cartisbn']);
 		print_r($_SESSION["cart"]);
-	}else {echo "There is no cart";}
-	echo "<br>";
+	}//else {echo "There is no cart";}
+	//echo "<br>";
 
 	//make searchfor an array to allow query making
 	$searchForArr = explode (",", $searchFor); 

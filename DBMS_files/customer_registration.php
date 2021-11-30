@@ -2,8 +2,9 @@
 
 <?php
 require_once 'connection.php';
+session_start();
 
-if (isset($_POST['register_submit'])) {
+if (isset($_POST['register_submit'])) {	
 	# Registration Submit button was clicked
 	$username = $_POST['username'];
 	$pin = $_POST['pin'];
@@ -23,12 +24,21 @@ if (isset($_POST['register_submit'])) {
 	$ccnumber = (int)$ccnumber;
 
 	$sql = "INSERT INTO customers VALUES ('$username', $pin, '$fname', '$lname', '$address', '$city', '$state', $zip, '$cctype', $ccnumber, '$ccexpiration');";
-	echo $sql;
+	//echo $sql;
+
 	if (mysqli_query($db, $sql)) {
         //echo "New record has been added successfully !";
+		//initialize session for customer
+		//set customer to username
+		$_SESSION["customer"] = $username;
+		//redirect to search page
+		header("Location: http://localhost/DBMS_files/screen2.php");
+		exit();
      } else {
-        echo "Error: " . $sql . ":-" . mysqli_error($db);
-     }	
+        //echo "Error: " . $sql . ":-" . mysqli_error($db); 
+	?>
+		<script> alert('That username is taken, please try another.'); </script>
+    <?php }	
 }
 	mysqli_close($db);
 ?>
@@ -141,7 +151,7 @@ if (isset($_POST['register_submit'])) {
 				<input type="submit" id="register_submit" name="register_submit" value="Register">
 			</td>
 			</form>
-			<form id="no_registration" action="index.php" method="post">
+			<form id="no_registration" action="screen2.php" method="post">
 			<td colspan="2" align="center">
 				<input type="submit" id="donotregister" name="donotregister" value="Don't Register">
 			</td>

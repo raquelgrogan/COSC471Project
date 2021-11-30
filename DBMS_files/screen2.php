@@ -1,4 +1,22 @@
-
+<?php
+	//if coming from user_login, customer username is stored in session
+	session_start();
+	if(isset($_POST["login"])){
+		$_SESSION["customer"] = $_POST["username"];
+		echo $_SESSION["customer"];
+	}
+	//if customer does not want to register and has a full shopping cart
+	if(isset($_POST['donotregister'])){
+		if(isset($_SESSION["cart"])){
+			if($_SESSION["cart"] != null){
+				//redirect to search screen and show error message
+			?>
+				<script> alert('In order to proceed with the payment, you need to register first'); </script>
+			<?php
+			}
+		}
+	}
+?>
 <!-- Figure 2: Search Screen by Alexander -->
 <html>
 <head>

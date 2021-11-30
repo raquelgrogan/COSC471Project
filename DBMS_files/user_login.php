@@ -1,4 +1,6 @@
+<?php
 
+?>
 <!DOCTYPE HTML>
 <head>
 <title>User Login</title>

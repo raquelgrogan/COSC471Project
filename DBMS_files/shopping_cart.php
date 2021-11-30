@@ -2,16 +2,19 @@
 	session_start();
 	require_once 'connection.php';
 
-	print_r($_SESSION["cart"]);
-	echo "<br>";
-
-	$cartArr = $_SESSION["cart"];
+	//print_r($_SESSION["cart"]);
+	//echo "<br>";
 
 	if (isset($_GET['delIsbn'])) {
 		$delIsbn = $_GET['delIsbn'];
 		$_SESSION["cart"]=array_diff($_SESSION["cart"],(array)$delIsbn);
 	}
-
+	
+	if(isset($_SESSION["cart"])){
+		$cartArr = $_SESSION["cart"];
+	}else {
+		$cartArr = [];
+	}
 	if(isset($_POST['recalculate_payment'])) {
 		$queryCart = "SELECT `ISBN`, `Title`, `Quantity` FROM book WHERE ISBN IN (";
 		foreach($cartArr as $isbn){
@@ -47,9 +50,11 @@
 	$query = rtrim($query,', '); //remove last comma
 	$query .= ");";
 	echo $query. "<br>";
-	if($_SESSION["cart"] != null){
-		$response1 = mysqli_query($db, $query);
-	}
+	if(isset($_SESSION["cart"])){
+		if($_SESSION["cart"] != null){
+			$response1 = mysqli_query($db, $query);
+		}
+	}	
 	
 	//Subtotal
 	$subTotal = 0.0;
@@ -90,29 +95,37 @@
 					<table align="center" BORDER="2" CELLPADDING="2" CELLSPACING="2" WIDTH="100%">
 						<?php 
 						$index = 0;
-						if($_SESSION["cart"] != null){
-							if($response1){
-								while($row = mysqli_fetch_array($response1)){ ?>
-								<th width='10%'>Remove</th><th width='60%'>Book Description</th>
-								<th width='10%'>Qty</th><th width='10%'>Price</th>
-								<tr>
-									<td><button name='delete' id='delete' onClick='del("<?php echo $row['ISBN']?>");return false;'>Delete Item</button></td>
-									<td><?php echo $row['Title'] ?></br>
-									<b>By</b> <?php echo $row['Author'] ?></br>
-									<b>Publisher:</b><?php echo $row['Publisher'] ?></td>
-									<td><input id='quantity<?php echo $index?>' name='quantity<?php echo $index?>' value='1' size='1' /></td>
-									<td><?php echo $row['Price'] ?></td>
-								</tr>
-								<?php
-									$subTotal += $row['Price'];
-									$index += 1;
+						if(isset($_SESSION["cart"])){
+							if($_SESSION["cart"] != null){
+								if($response1){
+									while($row = mysqli_fetch_array($response1)){ ?>
+									<th width='10%'>Remove</th><th width='60%'>Book Description</th>
+									<th width='10%'>Qty</th><th width='10%'>Price</th>
+									<tr>
+										<td><button name='delete' id='delete' onClick='del("<?php echo $row['ISBN']?>");return false;'>Delete Item</button></td>
+										<td><?php echo $row['Title'] ?></br>
+										<b>By</b> <?php echo $row['Author'] ?></br>
+										<b>Publisher:</b><?php echo $row['Publisher'] ?></td>
+										<td><input id='quantity<?php echo $index?>' name='quantity<?php echo $index?>' value='1' size='1' /></td>
+										<td><?php echo $row['Price'] ?></td>
+									</tr>
+									<?php
+										
+										if(isset($_POST['recalculate_payment'])) {
+											$qIndex = "quantity".$index;
+											$subTotal += $row['Price']*$_POST[$qIndex];
+										}else{
+											$subTotal += $row['Price'];
+										}
+										$index += 1;
+									}
 								}
+								else {
+									echo "Couldn't run database query";
+									echo msqli_error($db);
+								}
+								mysqli_close($db);
 							}
-							else {
-								echo "Couldn't run database query";
-								echo msqli_error($db);
-							}
-							mysqli_close($db);
 						}
 					?>	
 					</table>
