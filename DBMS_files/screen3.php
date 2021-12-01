@@ -4,16 +4,14 @@
 	//initialize session for cart
 	session_start();
 
+	//create array to hold cart if the session is set
 	if (!isset($_SESSION['cart'])) {
 		$_SESSION["cart"] = array();
 	}
 	//if customer is not set, set it equal to unknown
 	if (!isset($_SESSION['customer'])) {
 		$_SESSION["customer"] = "unknown";
-		echo "Customer is not set, set to: ".$_SESSION["customer"]." <br>";
-	}
-	else {
-		echo "Customer is set, set to: ".$_SESSION["customer"]." <br>";
+		//echo "Customer is not set, set to: ".$_SESSION["customer"]." <br>";
 	}
 
 	//grab elements from post
@@ -38,9 +36,9 @@
 
 	//make searchfor an array to allow query making
 	$searchForArr = explode (",", $searchFor); 
-	print_r($searchForArr); echo "<br>";
+	//print_r($searchForArr); echo "<br>";
 	
-	print_r($searchOn); echo "<br>";
+	//print_r($searchOn); echo "<br>";
 	$searchOnStr = implode(" ",$searchOn);
 	//creating query
 	$query = "SELECT `ISBN`, `Title`, `Author`, `Publisher`, `Category`, `Price`, `Quantity` FROM `book` WHERE (";
@@ -79,7 +77,7 @@
 		}
 	}
 	$query .= ";";
-	echo $query.'<br>';
+	//echo $query.'<br>';
 
 	$response1 = mysqli_query($db, $query);
 	//session_unset(); //unset session variables
@@ -104,7 +102,7 @@
 		<tr>
 			<td align="left">
 				
-					<h6> <fieldset>Your Shopping Cart has 0 items</fieldset> </h6>
+					<h6> <fieldset>Your Shopping Cart has <?php echo count($_SESSION["cart"]); echo " "; ?> items</fieldset> </h6>
 				
 			</td>
 			<td>

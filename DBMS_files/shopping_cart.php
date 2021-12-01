@@ -22,7 +22,7 @@
 		}
 		$queryCart = rtrim($queryCart,', '); //remove last comma
 		$queryCart .= ");";
-		echo $queryCart;
+		//echo $queryCart;
 		
 		$response2 = mysqli_query($db, $queryCart);
 		$i = 0;
@@ -49,7 +49,7 @@
 	}
 	$query = rtrim($query,', '); //remove last comma
 	$query .= ");";
-	echo $query. "<br>";
+	//echo $query. "<br>";
 	if(isset($_SESSION["cart"])){
 		if($_SESSION["cart"] != null){
 			$response1 = mysqli_query($db, $query);

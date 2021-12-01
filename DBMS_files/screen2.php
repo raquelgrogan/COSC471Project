@@ -3,7 +3,7 @@
 	session_start();
 	if(isset($_POST["login"])){
 		$_SESSION["customer"] = $_POST["username"];
-		echo $_SESSION["customer"];
+		//echo $_SESSION["customer"];
 	}
 	//if customer does not want to register and has a full shopping cart
 	if(isset($_POST['donotregister'])){
@@ -27,8 +27,18 @@
 		<tr>
 			<td>Search for: </td>
 			<form action="screen3.php" method="get">
-				<td><input name="searchfor" /></td>
-				<td><input type="submit" name="search" value="Search" /></td>
+				<td><input id="searchfor" onkeyup="enable()" name="searchfor" /></td>
+				<td><input type="submit" name="search" id="search" value="Search" disabled="disabled"/></td>
+				<script>
+					// Search button is disabled from the start. Function to enable once some text is entered 
+					function enable() {
+	 					if(document.getElementById("searchfor").value==="") { 
+            				document.getElementById('search').disabled = true; 
+        				} else { 
+            				document.getElementById('search').disabled = false;
+        				}
+    				}
+				</script>
 		</tr>
 		<tr>
 			<td>Search In: </td>
