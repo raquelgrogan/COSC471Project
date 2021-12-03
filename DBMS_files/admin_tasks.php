@@ -1,4 +1,25 @@
+<?php
+	require_once 'connection.php';
+	$username = $_POST["adminname"];
+	$password = $_POST["pin"];
 
+	$query = "SELECT * FROM admin";
+	$response = mysqli_query($db, $query);
+	$num_rows = mysqli_num_rows($response);
+
+	$validPass = false;
+    for ($i = 0; $i < $num_rows; $i++){
+        $row = mysqli_fetch_assoc($response);
+        if($row["Password"] == $password  && $row["Username"] == $username){
+            $validPass = true;
+        }
+    }
+	if($validPass == false){
+		//redirect to login page
+		header("Location: http://localhost/DBMS_files/admin_login.php");
+		exit();
+	}
+?>
 <!DOCTYPE HTML>
 <head>
 	<title>ADMIN TASKS</title>

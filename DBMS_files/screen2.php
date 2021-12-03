@@ -2,8 +2,28 @@
 	//if coming from user_login, customer username is stored in session
 	session_start();
 	if(isset($_POST["login"])){
-		$_SESSION["customer"] = $_POST["username"];
-		//echo $_SESSION["customer"];
+		require_once 'connection.php';
+		//check if valid username and password
+		$username = $_POST["username"];
+		$password = $_POST["pin"];
+		$query = "SELECT * FROM customers";
+		$response = mysqli_query($db, $query);
+		$num_rows = mysqli_num_rows($response);
+
+		$validPass = false;
+		for ($i = 0; $i < $num_rows; $i++){
+			$row = mysqli_fetch_assoc($response);
+			if($row["Pin"] == $password  && $row["Username"] == $username){
+				$validPass = true;
+			}
+		}
+		if($validPass == false){
+			//redirect to user login page and show error message
+			header("Location: http://localhost/DBMS_files/user_login.php");
+			exit();
+		}else{
+			$_SESSION["customer"] = $_POST["username"];
+		}
 	}
 	//if customer does not want to register and has a full shopping cart
 	if(isset($_POST['donotregister'])){

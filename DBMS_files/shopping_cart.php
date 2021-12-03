@@ -5,6 +5,10 @@
 	//print_r($_SESSION["cart"]);
 	//echo "<br>";
 
+	if (!isset($_SESSION['qtyCart'])){
+		$_SESSION['qtyCart'] = array();
+	}
+
 	if (isset($_GET['delIsbn'])) {
 		$delIsbn = $_GET['delIsbn'];
 		$_SESSION["cart"]=array_diff($_SESSION["cart"],(array)$delIsbn);
@@ -26,6 +30,7 @@
 		
 		$response2 = mysqli_query($db, $queryCart);
 		$i = 0;
+		$validQty = true;
 		if($response2){
 			while($row = mysqli_fetch_array($response2)){
 				$qtyStr = "quantity".$i;
@@ -33,9 +38,14 @@
 					echo '<script type="text/javascript">';
 					echo ' alert("Quantity for '.$row['Title'].' is too large, there is only '.$row['Quantity'].' books")'; 
 					echo '</script>';
+					$validQty = false;
 				}
 				$i += 1;
+				if($validQty == true){
+					$_SESSION['qtyCart'][$row['ISBN']] = array($row['ISBN'] => $_POST[$qtyStr]);
+				}
 			}
+			print_r($_SESSION['qtyCart']);
 		}
 
 		$_POST['recalculate_payment'] = ""; //reset button so isset is not always true
@@ -111,9 +121,12 @@
 									</tr>
 									<?php
 										
-										if(isset($_POST['recalculate_payment'])) {
-											$qIndex = "quantity".$index;
-											$subTotal += $row['Price']*$_POST[$qIndex];
+										if(isset($_POST['recalculate_payment']) && $validQty) {
+												//recalculate payment
+												$qIndex = "quantity".$index;
+												$subTotal += $row['Price']*$_POST[$qIndex];
+												//set textbox value to quantity entered
+												echo "<script> document.getElementById('quantity'+$index).value = $_POST[$qIndex];</script>";
 										}else{
 											$subTotal += $row['Price'];
 										}

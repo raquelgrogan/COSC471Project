@@ -1,5 +1,10 @@
 <?php
 	session_start();
+
+	print_r($_SESSION["cart"]); echo "<br>";
+	if(isset($_SESSION["qtyCart"])){
+		print_r($_SESSION["qtyCart"]); echo "<br>";
+	}
 	//handle proceeding to checkout
 	if($_SESSION["customer"] == "unknown"){
 		//redirect to registration screen

@@ -8,6 +8,7 @@
 	if (!isset($_SESSION['cart'])) {
 		$_SESSION["cart"] = array();
 	}
+	
 	//if customer is not set, set it equal to unknown
 	if (!isset($_SESSION['customer'])) {
 		$_SESSION["customer"] = "unknown";
@@ -95,6 +96,10 @@
 	function cart(isbn, searchfor, searchon, category){
 		window.location.href="screen3.php?cartisbn="+ isbn + "&searchfor=" + searchfor + "&searchon=" + searchon + "&category=" + category;
 	}
+	//disable button
+	function disableButton(isbn){
+		document.getElementById("btnCart"+isbn).disabled = true;
+	}
 	</script>
 </head>
 <body>
@@ -121,7 +126,7 @@
 				<?php 
 					if($response1){
 						while($row = mysqli_fetch_array($response1)){ ?>
-							<tr><td align='left'><button name='btnCart' id='btnCart' onClick='cart("<?php echo $row['ISBN'] ?>", "<?php echo $searchFor ?>", "<?php echo implode(" ",$searchOn); ?>", "<?php echo $category ?>")'>Add to Cart</button></td>
+							<tr><td align='left'><button name='btnCart' id='btnCart<?php echo $row["ISBN"]?>' onClick='cart("<?php echo $row['ISBN'] ?>", "<?php echo $searchFor ?>", "<?php echo implode(" ",$searchOn); ?>", "<?php echo $category ?>");'>Add to Cart</button></td>
 							<td rowspan='2' align='left'>"<?php echo $row['Title']?>"</br>
 							By <?php echo $row['Author'] ?></br>
 							<b>Publisher: </b><?php echo $row['Publisher'] ?></br>
