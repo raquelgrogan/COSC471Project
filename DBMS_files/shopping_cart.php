@@ -135,7 +135,6 @@
 								}
 								else {
 									echo "Couldn't run database query";
-									echo msqli_error($db);
 								}
 								mysqli_close($db);
 							}

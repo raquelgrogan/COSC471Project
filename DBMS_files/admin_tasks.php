@@ -16,7 +16,9 @@
     }
 	if($validPass == false){
 		//redirect to login page
-		header("Location: http://localhost/DBMS_files/admin_login.php");
+		echo "<script>alert('Invalid Login!');
+		window.location.href='admin_login.php';
+		</script>";
 		exit();
 	}
 ?>

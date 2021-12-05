@@ -19,7 +19,9 @@
 		}
 		if($validPass == false){
 			//redirect to user login page and show error message
-			header("Location: http://localhost/DBMS_files/user_login.php");
+			echo "<script>alert('Invalid Login!');
+			window.location.href='user_login.php';
+			</script>";
 			exit();
 		}else{
 			$_SESSION["customer"] = $_POST["username"];

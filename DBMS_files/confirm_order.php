@@ -8,7 +8,9 @@
 	//handle proceeding to checkout
 	if($_SESSION["customer"] == "unknown"){
 		//redirect to registration screen
-		header("Location: http://localhost/DBMS_files/customer_registration.php");
+		echo "<script>alert('Must Register First!');
+		window.location.href='customer_registration.php';
+		</script>";
 		exit();
 	}else{
 		//proceed to checkout as normal
