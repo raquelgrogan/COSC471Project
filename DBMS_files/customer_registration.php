@@ -27,12 +27,14 @@ if (isset($_POST['register_submit'])) {
 	//echo $sql;
 
 	if (mysqli_query($db, $sql)) {
-        //echo "New record has been added successfully !";
 		//initialize session for customer
 		//set customer to username
 		$_SESSION["customer"] = $username;
+		
 		//redirect to search page
-		header("Location: http://localhost/DBMS_files/screen2.php");
+		echo "<script>alert('New record has been added successfully !');
+		window.location.href='screen2.php';
+		</script>";
 		exit();
      } else {
         //echo "Error: " . $sql . ":-" . mysqli_error($db); 
