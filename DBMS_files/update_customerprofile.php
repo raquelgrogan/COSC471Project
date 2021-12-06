@@ -1,4 +1,45 @@
 <script>alert('Please enter all values')</script><!DOCTYPE HTML>
+<?php
+require_once 'connection.php';
+session_start();
+
+echo $_SESSION["customer"];
+
+if (isset($_POST['update_submit'])) {	
+	# Registration Submit button was clicked
+	$pin = $_POST['new_pin'];
+	$fname = $_POST['firstname'];
+	$lname = $_POST['lastname'];
+	$address = $_POST['address'];
+	$city = $_POST['city'];
+	$state = $_POST['state'];
+	$zip = $_POST['zip'];
+	$cctype = $_POST['credit_card'];
+	$ccnumber = $_POST['card_number'];
+	$ccexpiration = $_POST['expiration_date'];
+
+	
+	$pin = (int)$pin;
+	$zip = (int)$zip;
+	$ccnumber = (int)$ccnumber;
+
+	//$sql = "INSERT INTO customers VALUES ('$username', $pin, '$fname', '$lname', '$address', '$city', '$state', $zip, '$cctype', $ccnumber, '$ccexpiration');";
+	//echo $sql;
+	$sql = "UPDATE `customers` SET `Pin`= $pin,`FName`='$fname',`LName`='$lname',`Address`='$address',`City`='$city',`State`='$state',`ZIP`= $zip,`CC_Type`='$cctype',`CC_Num`=$ccnumber,`CC_Exp`='$ccexpiration' 
+	WHERE `Username` = '".$_SESSION['customer']."'";
+	echo $sql;
+
+	if (mysqli_query($db, $sql)) {
+        //echo "New record has been added successfully !";
+		//redirect to search page
+		header("Location: http://localhost/DBMS_files/confirm_order.php");
+		exit();
+     } else {
+        echo "Error: " . $sql . ":-" . mysqli_error($db); 
+	}	
+}
+	mysqli_close($db);
+?>
 <head>
 <title>UPDATE CUSTOMER PROFILE</title>
 

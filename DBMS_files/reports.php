@@ -44,7 +44,7 @@
     }
     echo "</table>";
 ?>
-<h1>Number of books per category</h1>
+<h1>Number of Books per Category</h1>
 <?php   //Report 2: Total number of book titles available in each category, in descending order.
     $query = "SELECT count(Title) AS titleCount, Category FROM book GROUP BY Category";
     $result = mysqli_query($db, $query);
@@ -63,8 +63,25 @@
     }
     echo "</table>";
 ?>
-<h1>Average monthly sales</h1>
+<h1>Average Monthly Sales</h1>
 <?php    //Report 3: Average monthly sales, in dollars, for the current year, ordered by month.
+    //select avg(totalPrice) from purchases group by Date order by Date
+    $query = "SELECT MONTH(STR_TO_DATE(Date, '%m/%d/%Y')) AS Month, AVG(totalPrice) AS AvgTotal FROM `purchases` GROUP BY MONTH(STR_TO_DATE(Date, '%m/%d/%Y')) ORDER BY MONTH(STR_TO_DATE(Date, '%m/%d/%Y'));";
+    $result = mysqli_query($db, $query);
+    $num_rows = mysqli_num_rows($result);
+    echo "<table>
+    <tr>
+        <th>Month</th>
+        <th>Average Monthly Total</th>  
+    </tr>";
+    for($i = 0; $i < $num_rows; $i++){
+        $row = mysqli_fetch_assoc($result);
+        echo "<tr>
+        <td>".$row["Month"]."</td>
+        <td>$".$row["AvgTotal"]."</td>
+        </tr>";
+    }
+    echo "</table>";
 
 ?>
 <h1>Number of Reviews per Book</h1>

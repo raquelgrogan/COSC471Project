@@ -8,7 +8,7 @@
 	if (!isset($_SESSION['cart'])) {
 		$_SESSION["cart"] = array();
 	}
-	
+
 	//if customer is not set, set it equal to unknown
 	if (!isset($_SESSION['customer'])) {
 		$_SESSION["customer"] = "unknown";
