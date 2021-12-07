@@ -1,6 +1,6 @@
 <?php
-	//if coming from user_login, customer username is stored in session
 	session_start();
+	//if coming from user_login, customer username is stored in session
 	if(isset($_POST["login"])){
 		require_once 'connection.php';
 		//check if valid username and password
@@ -20,6 +20,9 @@
 		if($validPass == false){
 			//redirect to user login page and show error message
 			header("Location: http://localhost/DBMS_files/user_login.php");
+			echo "<script>alert('Invalid Login!');
+			window.location.href='user_login.php';
+			</script>";
 			exit();
 		}else{
 			$_SESSION["customer"] = $_POST["username"];

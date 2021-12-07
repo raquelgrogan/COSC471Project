@@ -4,16 +4,16 @@ require_once 'connection.php';
 //initialize session for cart
 session_start();
 
-	//create array to hold cart if the session is set
-	if (!isset($_SESSION['cart'])) {
-		$_SESSION["cart"] = array();
-	}
+//create array to hold cart if the session is set
+if (!isset($_SESSION['cart'])) {
+	$_SESSION["cart"] = array();
+}
 
-	//if customer is not set, set it equal to unknown
-	if (!isset($_SESSION['customer'])) {
-		$_SESSION["customer"] = "unknown";
-		//echo "Customer is not set, set to: ".$_SESSION["customer"]." <br>";
-	}
+//if customer is not set, set it equal to unknown
+if (!isset($_SESSION['customer'])) {
+	$_SESSION["customer"] = "unknown";
+	//echo "Customer is not set, set to: ".$_SESSION["customer"]." <br>";
+}
 
 //grab elements from post
 $searchFor = $_GET["searchfor"];
@@ -109,8 +109,7 @@ $response1 = mysqli_query($db, $query);
 			<td align="left">
 
 				<h6>
-					<fieldset>Your Shopping Cart has <?php echo count($_SESSION["cart"]);
-														echo " "; ?> items</fieldset>
+					<fieldset>Your Shopping Cart has <?php echo count($_SESSION["cart"]); echo " "; ?> items</fieldset>
 				</h6>
 
 			</td>

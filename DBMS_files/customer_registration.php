@@ -28,7 +28,8 @@ if (isset($_POST['register_submit'])) {
 
 	if (mysqli_query($db, $sql)) {
 		//initialize session for customer
-		//set customer to username		
+		//set customer to username	
+		$_SESSION["customer"] = $_POST["username"];	
 		//redirect to search page
 		header("Location: http://localhost/DBMS_files/screen2.php");
 		exit();

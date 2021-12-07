@@ -1,6 +1,6 @@
 <?php
 	session_start();
-
+	require_once 'connection.php';
 	print_r($_SESSION["cart"]); echo "<br>";
 	if(isset($_SESSION["qtyCart"])){
 		print_r($_SESSION["qtyCart"]); echo "<br>";
@@ -8,14 +8,31 @@
 	//handle proceeding to checkout
 	if($_SESSION["customer"] == "unknown"){
 		//redirect to registration screen
-		echo "<script>alert('Must Register First!');
-		window.location.href='customer_registration.php';
-		</script>";
+		header("Location: http://localhost/DBMS_files/customer_registration.php");
 		exit();
 	}else{
 		//proceed to checkout as normal
 		echo $_SESSION["customer"];
 	}
+
+	$query = "SELECT * FROM `customers` WHERE Username = '".$_SESSION["customer"]."'";
+	echo $query;
+	$response1 = mysqli_query($db, $query);
+	if ($response1) {
+		while ($row = mysqli_fetch_array($response1)) {
+			$firstname = $row["FName"];
+			$lastname = $row["LName"];
+			$address = $row["Address"];
+			$city = $row["City"];
+			$state = $row["State"];
+			$zip = $row["ZIP"];
+			$cardType = $row["CC_Type"];
+			$cardNumber = $row["CC_Num"];
+			$cardExp = $row["CC_Exp"];
+		}
+	}
+
+	
 ?>
 <!DOCTYPE HTML>
 <head>
@@ -27,13 +44,13 @@
 	<form id="buy" action="proof_purchase.php" method="post">
 	<tr>
 	<td>
-	Shipping Address:
+	Shipping Address: <?php echo $address?>
 	</td>
 	</tr>
 	<td colspan="2">
-		test test	</td>
+	<?php echo $firstname?> <?php echo $lastname?>	</td>
 	<td rowspan="3" colspan="2">
-		<input type="radio" name="cardgroup" value="profile_card" checked>Use Credit card on file<br />MASTER - 1234567812345678 - 12/2015<br />
+		<input type="radio" name="cardgroup" value="profile_card" checked>Use Credit card on file<br /><?php echo $cardType?> - <?php echo $cardNumber?> - <?php echo $cardExp?><br />
 		<input type="radio" name="cardgroup" value="new_card">New Credit Card<br />
 				<select id="credit_card" name="credit_card">
 					<option selected disabled>select a card type</option>
@@ -46,22 +63,43 @@
 	</td>
 	<tr>
 	<td colspan="2">
-		test	</td>		
+	<?php echo $address?>	</td>		
 	</tr>
 	<tr>
 	<td colspan="2">
-		test	</td>
+	<?php echo $city?>	</td>
 	</tr>
 	<tr>
 	<td colspan="2">
-		Tennessee, 12345	</td>
+	<?php echo $state?>, <?php echo $zip?>	</td>
 	</tr>
 	<tr>
 	<td colspan="3" align="center">
 	<div id="bookdetails" style="overflow:scroll;height:180px;width:520px;border:1px solid black;">
 	<table border='1'>
 		<th>Book Description</th><th>Qty</th><th>Price</th>
-		<tr><td>iuhdf</br><b>By</b> Avi Silberschatz</br><b>Publisher:</b> McGraw-Hill</td><td>1</td><td>$12.99</td></tr>	</table>
+		<?php
+			$subTotal = 0;
+			foreach ($_SESSION['cart'] as $isbn){
+				$query = "SELECT `ISBN`, `Title`, `Author`, `Publisher`, `Category`, `Price`, `Quantity` FROM `book` WHERE `ISBN` = '".$isbn."'";
+				//echo $query;
+				$response1 = mysqli_query($db, $query);
+				while ($row = mysqli_fetch_array($response1)) {
+				?>
+				<tr>
+					<td><?php echo $row["Title"]?></br>
+					<b>By</b> <?php echo $row["Author"]?></br>
+					<b>Publisher:</b> <?php echo $row["Publisher"]?></td>
+					<td><?php echo implode($_SESSION['qtyCart'][$isbn]) ?></td>
+					<td>$<?php echo $row["Price"]?></td>
+				</tr>	
+				<?php
+					$subTotal += $row['Price']* (int) implode($_SESSION['qtyCart'][$isbn]);
+				}
+			}
+			$_SESSION["total"] = $subTotal;
+		?>
+	</table>
 	</div>
 	</td>
 	</tr>
@@ -73,7 +111,7 @@
 	</td>
 	<td align="right">
 	<div id="bookdetails" style="overflow:scroll;height:180px;width:260px;border:1px solid black;">
-		SubTotal:$12.99</br>Shipping_Handling:$2</br>_______</br>Total:$14.99	</div>
+		SubTotal: $<?php echo $subTotal?></br>Shipping_Handling:$2</br>_______</br>Total: $<?php echo $subTotal+2?>	</div>
 	</td>
 	</tr>
 	<tr>
